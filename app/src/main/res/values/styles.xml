@@ -1,3 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Custom TextAppearance for Toolbar title -->
+    <style name="CustomToolbarTitleText" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">@font/poppins_bold</item>
+        <item name="android:textColor">#f72585</item>
+        <item name="android:textSize">25sp</item>
+    </style>
+
 </resources>
