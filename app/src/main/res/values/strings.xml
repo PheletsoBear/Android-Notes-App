@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">To-do List</string>
+    <string name="note_title">Note Title</string>
+    <string name="note_title_desc">note title</string>
+    <string name="date_format">YYYY/MM/DD</string>
+    <string name="date_format_desc">note date</string>
+    <string name="search_notes">Search notes...</string>
 
 </resources>
