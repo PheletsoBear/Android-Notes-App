@@ -132,10 +132,8 @@ class NoteListFragment : Fragment(){
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
         }
     }
-
     ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.notesListRV)
 }
-
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
