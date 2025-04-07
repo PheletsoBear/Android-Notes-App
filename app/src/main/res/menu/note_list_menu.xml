@@ -9,4 +9,12 @@
         android:iconTint="@color/text_medium"
         android:orderInCategory="100"
         app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/delete_icon"
+        android:title="delete"
+        android:icon="@drawable/ic_delete"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        />
 </menu>
