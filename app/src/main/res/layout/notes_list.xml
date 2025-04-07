@@ -27,7 +27,7 @@
 
         <TextView
             android:id="@+id/note_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/note_title"
             android:textSize="14sp"
@@ -36,6 +36,9 @@
             android:ellipsize="end"
             android:fontFamily="@font/poppins_bold"
             android:contentDescription="@string/note_title_desc"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/note_date"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints" />
 
         <TextView
@@ -43,6 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/date_format"
+            android:paddingHorizontal="5dp"
             android:textSize="10sp"
             android:maxLines="1"
             android:textColor="#db7f8e"

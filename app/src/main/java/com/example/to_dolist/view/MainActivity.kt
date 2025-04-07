@@ -1,4 +1,4 @@
-package com.example.to_dolist
+package com.example.to_dolist.view
 
 import android.os.Build
 import android.os.Bundle
@@ -7,9 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.example.to_dolist.databinding.ActivityMainBinding
 import androidx.appcompat.widget.Toolbar
+import com.example.to_dolist.R
+import dagger.hilt.android.AndroidEntryPoint
 
-
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 

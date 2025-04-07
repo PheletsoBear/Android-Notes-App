@@ -6,9 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.to_dolist.data.local.Notes
 import com.example.to_dolist.databinding.NotesListBinding
 import com.example.to_dolist.R
+import com.example.to_dolist.view.NoteListFragmentDirections
 
 class NotesAdapter(
-    private var notes: MutableList<Notes>,
+    var notes: MutableList<Notes>,
     private var context: Context,
     private val navController: NavController,
 
@@ -22,8 +23,8 @@ class NotesAdapter(
          contentDisplay.text = note.content
            noteDate.text = note.date
            cvBottomNav.setOnClickListener {
-
-           navController.navigate(R.id.action_noteListFragment_to_viewNoteFragment)
+               val action = NoteListFragmentDirections.actionNoteListFragmentToViewNoteFragment(note)
+                navController.navigate(action)
 
 //               val removedNote = notes[adapterPosition]
 //               val removedPosition = adapterPosition

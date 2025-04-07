@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/noteListFragment"
-        android:name="com.example.to_dolist.NoteListFragment"
+        android:name="com.example.to_dolist.view.NoteListFragment"
         android:label="Note List"
         tools:layout="@layout/fragment_note_list">
 
@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/viewNoteFragment"
-        android:name="com.example.to_dolist.ViewNoteFragment"
+        android:name="com.example.to_dolist.view.ViewNoteFragment"
         android:label="View Note"
         tools:layout="@layout/fragment_view_note">
 
@@ -26,6 +26,11 @@
             android:id="@+id/action_viewNoteFragment_to_noteListFragment"
             app:destination="@id/noteListFragment"
             />
+
+        <argument
+            android:name="note"
+            app:argType="com.example.to_dolist.data.local.Notes"
+            app:nullable="false" />
     </fragment>
 
 </navigation>

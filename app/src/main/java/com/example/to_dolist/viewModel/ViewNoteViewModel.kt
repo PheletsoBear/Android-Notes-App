@@ -1,16 +1,18 @@
-package com.example.to_dolist
+package com.example.to_dolist.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.to_dolist.data.local.Notes
+import com.example.to_dolist.repo.INoteRepository
+import com.example.to_dolist.repo.NoteRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ViewNoteViewModel @Inject constructor(
-    private val repository: NoteRepository
+    private val repository: INoteRepository
 ) : ViewModel() {
 
     fun getAllNotes(): LiveData<List<Notes>> = repository.allNotes
