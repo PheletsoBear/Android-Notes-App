@@ -21,7 +21,7 @@ class ViewNoteViewModel @Inject constructor(
     val allNotes: LiveData<List<Notes>> get() = _allNotes
 
     init {
-        fetchSortedNotes(SortType.DATE_ASC)
+        fetchSortedNotes(SortType.A_Z)
     }
 
     fun insert(note: Notes) = viewModelScope.launch {
@@ -33,34 +33,27 @@ class ViewNoteViewModel @Inject constructor(
     }
 
     fun fetchSortedNotes(sortType: SortType){
+        viewModelScope.launch {
         when(sortType){
 
             SortType.A_Z -> {
-                repository.getAllNotesSortedByTitleAsc().observeForever {
-                    _allNotes.value = it
-                }
+                _allNotes.value = repository.getAllNotesSortedByTitleAsc()
             }
 
             SortType.Z_A -> {
-                repository.getAllNotesSortedByTitleDesc().observeForever {
-                    _allNotes.value = it
-                }
-
+                _allNotes.value = repository.getAllNotesSortedByTitleDesc()
             }
 
            SortType.DATE_ASC -> {
-                repository.getAllNotesSortedByDateAsc().observeForever {
-                    _allNotes.value = it
-                }
+               _allNotes.value = repository.getAllNotesSortedByDateAsc()
            }
 
            SortType.DATE_DESC -> {
-           repository.getAllNotesSortedByDateDesc().observeForever {
-               _allNotes.value = it
-           }
+               _allNotes.value = repository.getAllNotesSortedByDateDesc()
            }
         }
 
     }
 
+}
 }
