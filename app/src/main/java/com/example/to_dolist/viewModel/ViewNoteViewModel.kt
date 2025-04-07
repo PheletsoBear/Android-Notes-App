@@ -21,7 +21,7 @@ class ViewNoteViewModel @Inject constructor(
     val allNotes: LiveData<List<Notes>> get() = _allNotes
 
     init {
-        fetchSortedNotes(SortType.A_Z)
+        fetchSortedNotes(SortType.DATE_ASC)
     }
 
     fun insert(note: Notes) = viewModelScope.launch {
@@ -54,6 +54,5 @@ class ViewNoteViewModel @Inject constructor(
         }
 
     }
-
-}
+  }
 }
