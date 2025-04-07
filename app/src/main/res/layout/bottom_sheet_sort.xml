@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/sortTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sort By"
+        android:fontFamily="@font/poppins_bold"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/sortAz"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="A-Z"
+        android:textColor="@color/body"
+        android:drawableEnd="@drawable/ic_asc"
+        app:layout_constraintTop_toBottomOf="@id/sortTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp"/>
+
+    <Button
+        android:id="@+id/sortZa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Z-A"
+        android:textColor="@color/body"
+        android:drawableRight="@drawable/ic_desc"
+        app:layout_constraintTop_toBottomOf="@id/sortAz"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp"/>
+
+    <Button
+        android:id="@+id/sortDateAsc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/body"
+        android:text="Newer"
+        android:drawableEnd="@drawable/ic_date_asc"
+        app:layout_constraintTop_toBottomOf="@id/sortZa"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp"/>
+
+    <Button
+        android:id="@+id/sortDateDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Older"
+        android:textColor="@color/body"
+        android:drawableEnd="@drawable/ic_date_desc"
+        app:layout_constraintTop_toBottomOf="@id/sortDateAsc"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,8 +22,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.to_dolist.R
+import com.example.to_dolist.constants.SortType
 import com.example.to_dolist.viewModel.ViewNoteViewModel
 import com.example.to_dolist.databinding.FragmentNoteListBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
@@ -65,8 +67,10 @@ class NoteListFragment : Fragment(){
         binding.notesListRV.layoutManager = LinearLayoutManager(requireContext())
         binding.notesListRV.adapter = notesAdapter
 
-        viewModel. getAllNotes().observe(viewLifecycleOwner){ notes ->
-            notesAdapter.updateNotes(notes)
+        viewModel.allNotes.observe(viewLifecycleOwner){ notes ->
+            if (notes != null) {
+                notesAdapter.updateNotes(notes)
+            }
         }
 
 
@@ -142,9 +146,44 @@ class NoteListFragment : Fragment(){
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
             R.id.sort_icon ->{
+                showSortBottomSheet()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
         }
     }
+
+
+    private fun showSortBottomSheet() {
+
+        val bindingBottomSheet = com.example.to_dolist.databinding.BottomSheetSortBinding.inflate(layoutInflater)
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+
+        bottomSheetDialog.setContentView(bindingBottomSheet.root)
+
+        bindingBottomSheet.sortAz.setOnClickListener {
+
+            viewModel.fetchSortedNotes(SortType.A_Z)
+            bottomSheetDialog.dismiss()
+            }
+
+
+        bindingBottomSheet.sortZa.setOnClickListener {
+            viewModel.fetchSortedNotes(SortType.Z_A)
+            bottomSheetDialog.dismiss()
+        }
+
+        bindingBottomSheet.sortDateAsc.setOnClickListener {
+            viewModel.fetchSortedNotes(SortType.DATE_ASC)
+            bottomSheetDialog.dismiss()
+        }
+
+        bindingBottomSheet.sortDateDesc.setOnClickListener {
+            viewModel.fetchSortedNotes(SortType.DATE_DESC)
+            bottomSheetDialog.dismiss()
+        }
+
+        bottomSheetDialog.show()
+    }
+
 }
