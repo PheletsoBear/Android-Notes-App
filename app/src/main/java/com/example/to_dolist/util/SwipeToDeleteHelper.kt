@@ -64,7 +64,7 @@ class SwipeToDeleteHelper (
                         ContextCompat.getDrawable(context, R.drawable.ic_delete_sweep)
                     val iconMargin = (itemView.height - icon!!.intrinsicHeight) / 2
 
- a                    if (dX < 0) { // Swiping left
+             if (dX < 0) { // Swiping left
                         paint.color = Color.RED
                         val background = RectF(
                             itemView.right.toFloat() + dX,
