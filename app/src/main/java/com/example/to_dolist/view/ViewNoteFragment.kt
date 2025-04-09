@@ -1,5 +1,6 @@
 package com.example.to_dolist.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -51,7 +52,6 @@ private val args: ViewNoteFragmentArgs by navArgs()
 
         setSubHeaderFocus()
         setHeaderFocus()
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -65,6 +65,12 @@ private val args: ViewNoteFragmentArgs by navArgs()
                 requireActivity().onBackPressed()
                 return true
             }
+
+            R.id.share_icon ->{
+                handleShare()
+                return true
+            }
+
             R.id.delete_icon ->{
                 deleteNote()
                return  true
@@ -106,7 +112,7 @@ private val args: ViewNoteFragmentArgs by navArgs()
 
     fun deleteNote(){
         viewModel.delete(args.note)
-        val snackbar = Snackbar.make(binding.root, "Note deleted", Snackbar.LENGTH_LONG)
+        val snackbar = Snackbar.make(binding.root, "Note deleted!", Snackbar.LENGTH_LONG)
             .setAction("Undo") {
                 viewModel.insert(args.note)
             }
@@ -119,6 +125,17 @@ private val args: ViewNoteFragmentArgs by navArgs()
                 }
             })
         snackbar.show()
+    }
+
+    fun handleShare() {
+        val title = binding.editTextHeading.text.toString()
+        val content = binding.editTextSubHeader.text.toString()
+        val intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, "${title} \n\n ${content}")
+        }
+        startActivity(intent)
     }
 
 }
