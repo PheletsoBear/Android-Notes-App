@@ -162,11 +162,9 @@ class NoteListFragment : Fragment(){
         bottomSheetDialog.setContentView(bindingBottomSheet.root)
 
         bindingBottomSheet.sortAz.setOnClickListener {
-
             viewModel.fetchSortedNotes(SortType.A_Z)
             bottomSheetDialog.dismiss()
             }
-
 
         bindingBottomSheet.sortZa.setOnClickListener {
             viewModel.fetchSortedNotes(SortType.Z_A)
@@ -185,5 +183,4 @@ class NoteListFragment : Fragment(){
 
         bottomSheetDialog.show()
     }
-
 }
