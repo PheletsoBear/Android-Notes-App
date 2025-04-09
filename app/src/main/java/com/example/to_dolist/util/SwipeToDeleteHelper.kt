@@ -18,7 +18,8 @@ class SwipeToDeleteHelper (
     private val recyclerView: RecyclerView,
     private val notesAdapter: NotesAdapter,
     private val viewModel: ViewNoteViewModel,
-    private val context: Context)
+    private val context: Context
+)
 {
 
     fun attach() {
@@ -63,7 +64,7 @@ class SwipeToDeleteHelper (
                         ContextCompat.getDrawable(context, R.drawable.ic_delete_sweep)
                     val iconMargin = (itemView.height - icon!!.intrinsicHeight) / 2
 
-                    if (dX < 0) { // Swiping left
+ a                    if (dX < 0) { // Swiping left
                         paint.color = Color.RED
                         val background = RectF(
                             itemView.right.toFloat() + dX,
