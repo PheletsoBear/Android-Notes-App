@@ -2,11 +2,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.NavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.to_dolist.data.local.Notes
 import com.example.to_dolist.databinding.NotesListBinding
-import com.example.to_dolist.R
 import com.example.to_dolist.view.NoteListFragmentDirections
+import com.example.to_dolist.util.NotesDiffCallUtil
+
 
 class NotesAdapter(
     var notes: MutableList<Notes>,
@@ -25,18 +27,6 @@ class NotesAdapter(
            cvBottomNav.setOnClickListener {
                val action = NoteListFragmentDirections.actionNoteListFragmentToViewNoteFragment(note)
                 navController.navigate(action)
-
-//               val removedNote = notes[adapterPosition]
-//               val removedPosition = adapterPosition
-//
-//               notes.removeAt(adapterPosition)
-//               notifyItemRemoved(adapterPosition)
-//
-//               Snackbar.make(binding.root, "Note deleted", Snackbar.LENGTH_LONG)
-//                   .setAction("Undo") {
-//                       notes.add(removedPosition, removedNote)
-//                       notifyItemInserted(removedPosition)
-//                   }.show()
            }
        }
 
@@ -54,7 +44,6 @@ class NotesAdapter(
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         holder.bind(notes[position])
-
     }
 
     override fun getItemCount(): Int {
@@ -62,8 +51,11 @@ class NotesAdapter(
     }
 
     fun updateNotes(newNotes: List<Notes>) {
-        notes.clear()
-        notes.addAll(newNotes)
-        notifyDataSetChanged()
+        val diffCallback = NotesDiffCallUtil(notes, newNotes)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
+        notes = newNotes.toMutableList()
+
+        diffResult.dispatchUpdatesTo(this)
     }
 }
