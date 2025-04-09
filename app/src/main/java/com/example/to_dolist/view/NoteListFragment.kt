@@ -61,8 +61,9 @@ class NoteListFragment : Fragment(){
         val navController = navHostFragment.navController
 
         notesAdapter = NotesAdapter(
-           mutableListOf(), requireContext(),
-            navController = navController
+           mutableListOf(),
+            requireContext(),
+            navController
         )
         binding.notesListRV.layoutManager = LinearLayoutManager(requireContext())
         binding.notesListRV.adapter = notesAdapter
