@@ -1,10 +1,6 @@
 package com.example.to_dolist.view
 
 import NotesAdapter
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -13,23 +9,19 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.to_dolist.R
 import com.example.to_dolist.constants.SortType
-import com.example.to_dolist.viewModel.ViewNoteViewModel
 import com.example.to_dolist.databinding.FragmentNoteListBinding
 import com.example.to_dolist.util.SwipeToDeleteHelper
+import com.example.to_dolist.viewModel.ViewNoteViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.getValue
 
 @AndroidEntryPoint
 class NoteListFragment : Fragment(){
@@ -58,22 +50,11 @@ class NoteListFragment : Fragment(){
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
         setHasOptionsMenu(true)
 
-        val navHostFragment = activity.supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            activity.supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        notesAdapter = NotesAdapter(
-           mutableListOf(),
-            requireContext(),
-            navController
-        )
-        binding.notesListRV.layoutManager = LinearLayoutManager(requireContext())
-        binding.notesListRV.adapter = notesAdapter
-
-        viewModel.allNotes.observe(viewLifecycleOwner){ notes ->
-            if (notes != null) {
-                notesAdapter.updateNotes(notes)
-            }
-        }
+        setAdapter(navController)
 
         val swipeToDeleteHelper = SwipeToDeleteHelper(
             binding.notesListRV,
@@ -82,7 +63,9 @@ class NoteListFragment : Fragment(){
             requireContext()
         )
         swipeToDeleteHelper.attach()
-}
+
+        onSearchNote()
+    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
@@ -95,6 +78,23 @@ class NoteListFragment : Fragment(){
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    fun setAdapter(navController: NavController){
+
+        notesAdapter = NotesAdapter(
+            mutableListOf(),
+            requireContext(),
+            navController
+        )
+        binding.notesListRV.layoutManager = LinearLayoutManager(requireContext())
+        binding.notesListRV.adapter = notesAdapter
+
+        viewModel.allNotes.observe(viewLifecycleOwner){ notes ->
+            if (notes != null) {
+                notesAdapter.updateNotes(notes)
+            }
         }
     }
 
@@ -127,5 +127,29 @@ class NoteListFragment : Fragment(){
         }
 
         bottomSheetDialog.show()
+    }
+
+    fun onSearchNote(){
+
+        binding.searchBar.doOnTextChanged { text, _, _, _ ->
+
+            val query = text?.toString() ?: ""
+            if (query.isNotBlank() && binding.searchBar.isFocused ) {
+
+                viewModel.searchQuery(query)
+                viewModel.filteredNotes.observe(viewLifecycleOwner) { notes ->
+                   notes?.let {
+                        notesAdapter.updateNotes(notes)
+                    }
+                }
+            } else {
+
+                viewModel.allNotes.observe(viewLifecycleOwner) { notes ->
+                    notes?.let {
+                        notesAdapter.updateNotes(notes)
+                    }
+                }
+            }
+        }
     }
 }

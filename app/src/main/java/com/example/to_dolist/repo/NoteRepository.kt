@@ -13,12 +13,13 @@ interface INoteRepository {
     suspend fun getAllNotesSortedByTitleDesc(): List<Notes>
     suspend fun getAllNotesSortedByDateAsc(): List<Notes>
     suspend fun getAllNotesSortedByDateDesc(): List<Notes>
+    suspend fun searchNotes(query: String): List<Notes>
 
 
 }
 
-class NoteRepositoryImpl @Inject constructor
-    (private val noteDao: NoteDao
+class NoteRepositoryImpl @Inject constructor(
+    private val noteDao: NoteDao
 ): INoteRepository {
 
     override suspend fun insertNote(note: Notes) = noteDao.insertNote(note)
@@ -27,4 +28,5 @@ class NoteRepositoryImpl @Inject constructor
     override suspend fun getAllNotesSortedByTitleDesc(): List<Notes> = noteDao.getAllNotesSortedByTitleDesc()
     override suspend fun getAllNotesSortedByDateAsc(): List<Notes> = noteDao.getAllNotesSortedByDateAsc()
     override suspend fun getAllNotesSortedByDateDesc(): List<Notes> = noteDao.getAllNotesSortedByDateDesc()
+    override suspend fun searchNotes(query: String): List<Notes> = noteDao.searchNotes("%$query%")
 }

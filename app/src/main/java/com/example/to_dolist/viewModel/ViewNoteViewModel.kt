@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.Query
 import com.example.to_dolist.constants.SortType
 import com.example.to_dolist.data.local.Notes
 import com.example.to_dolist.repo.INoteRepository
@@ -19,6 +20,9 @@ class ViewNoteViewModel @Inject constructor(
 
     private val _allNotes = MutableLiveData<List<Notes>>()
     val allNotes: LiveData<List<Notes>> get() = _allNotes
+
+    private val _filteredNotes = MutableLiveData<List<Notes>>()
+    val filteredNotes: LiveData<List<Notes>> get() = _filteredNotes
 
     init {
         fetchSortedNotes(SortType.DATE_ASC)
@@ -53,6 +57,12 @@ class ViewNoteViewModel @Inject constructor(
            }
         }
 
-    }
-  }
+      }
+   }
+     fun searchQuery(query: String){
+
+        viewModelScope.launch {
+            _filteredNotes.value = repository.searchNotes(query)
+        }
+     }
 }

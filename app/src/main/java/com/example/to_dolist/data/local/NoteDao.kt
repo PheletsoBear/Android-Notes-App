@@ -23,4 +23,7 @@ interface NoteDao {
 
     @Query("SELECT * FROM notes Order BY date DESC")
     suspend fun getAllNotesSortedByDateDesc(): List<Notes>
+
+    @Query("SELECT * FROM notes WHERE title LIKE :query OR content LIKE :query")
+    suspend fun searchNotes(query: String): List<Notes>
 }

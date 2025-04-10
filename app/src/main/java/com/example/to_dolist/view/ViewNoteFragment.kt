@@ -112,7 +112,7 @@ private val args: ViewNoteFragmentArgs by navArgs()
 
     fun deleteNote(){
         viewModel.delete(args.note)
-        val snackbar = Snackbar.make(binding.root, "Note deleted!", Snackbar.LENGTH_LONG)
+        val snackbar = Snackbar.make(binding.root, "Note deleted", Snackbar.LENGTH_LONG)
             .setAction("Undo") {
                 viewModel.insert(args.note)
             }
