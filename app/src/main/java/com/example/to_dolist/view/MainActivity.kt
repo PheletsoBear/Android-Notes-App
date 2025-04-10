@@ -2,7 +2,9 @@ package com.example.to_dolist.view
 
 import android.os.Build
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.example.to_dolist.databinding.ActivityMainBinding
@@ -20,8 +22,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
@@ -34,4 +34,14 @@ class MainActivity : AppCompatActivity() {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
     }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (currentFocus != null) {
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+            currentFocus!!.clearFocus()
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
 }

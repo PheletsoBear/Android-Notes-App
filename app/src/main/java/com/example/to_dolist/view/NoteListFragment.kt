@@ -1,14 +1,19 @@
 package com.example.to_dolist.view
 
 import NotesAdapter
+import android.annotation.SuppressLint
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -42,6 +47,7 @@ class NoteListFragment : Fragment(){
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -63,7 +69,8 @@ class NoteListFragment : Fragment(){
             requireContext()
         )
         swipeToDeleteHelper.attach()
-
+        clearFocus()
+        hideKeyboardAndClearFocus(binding.searchBar)
         onSearchNote()
     }
 
@@ -150,6 +157,25 @@ class NoteListFragment : Fragment(){
                     }
                 }
             }
+        }
+    }
+
+    private fun hideKeyboardAndClearFocus(view: View) {
+        val imm = view.context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+        view.clearFocus()
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    fun clearFocus(){
+
+        binding.nestedScrollView.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                val imm = requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.searchBar.windowToken, 0)
+                binding.searchBar.clearFocus()
+            }
+            false
         }
     }
 }
