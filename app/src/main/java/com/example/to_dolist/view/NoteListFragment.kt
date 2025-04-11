@@ -137,34 +137,28 @@ class NoteListFragment : Fragment(){
 
     fun onSearchNote(){
 
+        var isSearching = false
+
         binding.searchBar.doOnTextChanged { text, _, _, _ ->
 
             val query = text?.toString() ?: ""
             if (query.isNotBlank()) {
-
-                binding.searchBar.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_search,
-                    0,
-                    R.drawable.ic_cancel,
-                    0
-                )
+                isSearching = true
+                binding.searchBar.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_search, 0, R.drawable.ic_cancel, 0)
                 viewModel.searchQuery(query)
-                viewModel.filteredNotes.observe(viewLifecycleOwner) { notes ->
-                  notes?.let { notesAdapter.updateNotes(notes) }
-                }
             } else {
-
-                binding.searchBar.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_search,
-                    0,
-                    0,
-                    0
-                )
-
-                viewModel.allNotes.observe(viewLifecycleOwner) { notes ->
-                    notes?.let { notesAdapter.updateNotes(notes) }
-                }
+                isSearching = false
+                binding.searchBar.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_search, 0, 0, 0)
             }
+
+        viewModel.filteredNotes.observe(viewLifecycleOwner) {
+            if (isSearching)  it?.let { notesAdapter.updateNotes(it) }
+        }
+
+        viewModel.allNotes.observe(viewLifecycleOwner) {
+            if (!isSearching)  it?.let { notesAdapter.updateNotes(it) }
+        }
+
         }
         clearSearchQuery()
     }
