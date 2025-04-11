@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -99,7 +98,7 @@ class NoteListFragment : Fragment(){
         binding.notesListRV.adapter = notesAdapter
 
         viewModel.allNotes.observe(viewLifecycleOwner){ notes ->
-            if (notes != null) {
+           notes?.let {
                 notesAdapter.updateNotes(notes)
             }
         }
@@ -141,23 +140,33 @@ class NoteListFragment : Fragment(){
         binding.searchBar.doOnTextChanged { text, _, _, _ ->
 
             val query = text?.toString() ?: ""
-            if (query.isNotBlank() && binding.searchBar.isFocused ) {
+            if (query.isNotBlank()) {
 
+                binding.searchBar.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_search,
+                    0,
+                    R.drawable.ic_cancel,
+                    0
+                )
                 viewModel.searchQuery(query)
                 viewModel.filteredNotes.observe(viewLifecycleOwner) { notes ->
-                   notes?.let {
-                        notesAdapter.updateNotes(notes)
-                    }
+                  notes?.let { notesAdapter.updateNotes(notes) }
                 }
             } else {
 
+                binding.searchBar.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_search,
+                    0,
+                    0,
+                    0
+                )
+
                 viewModel.allNotes.observe(viewLifecycleOwner) { notes ->
-                    notes?.let {
-                        notesAdapter.updateNotes(notes)
-                    }
+                    notes?.let { notesAdapter.updateNotes(notes) }
                 }
             }
         }
+        clearSearchQuery()
     }
 
     private fun hideKeyboardAndClearFocus(view: View) {
@@ -174,6 +183,16 @@ class NoteListFragment : Fragment(){
                 val imm = requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(binding.searchBar.windowToken, 0)
                 binding.searchBar.clearFocus()
+            }
+            false
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    fun clearSearchQuery(){
+        binding.searchBar.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                    binding.searchBar.text.clear()
             }
             false
         }
