@@ -13,4 +13,11 @@
         android:title="delete"
         android:icon="@drawable/ic_delete"
         app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/done"
+        android:title="Done"
+        android:iconTint="@color/text_medium"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"/>
 </menu>

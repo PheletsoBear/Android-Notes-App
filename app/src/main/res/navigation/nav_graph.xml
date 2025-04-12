@@ -30,7 +30,7 @@
         <argument
             android:name="note"
             app:argType="com.example.to_dolist.data.local.Notes"
-            app:nullable="false" />
+            app:nullable="true" />
     </fragment>
 
 </navigation>

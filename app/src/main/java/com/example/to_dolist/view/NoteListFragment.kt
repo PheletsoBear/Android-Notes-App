@@ -59,6 +59,7 @@ class NoteListFragment : Fragment(){
             activity.supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
+        navigateToViewNoteFragment(navController)
         setAdapter(navController)
 
         val swipeToDeleteHelper = SwipeToDeleteHelper(
@@ -87,6 +88,13 @@ class NoteListFragment : Fragment(){
         }
     }
 
+   fun navigateToViewNoteFragment(navController: NavController ){
+       binding.fab.setOnClickListener {
+            val action = NoteListFragmentDirections.actionNoteListFragmentToViewNoteFragment(null)
+            navController.navigate(action)
+        }
+    }
+
     fun setAdapter(navController: NavController){
 
         notesAdapter = NotesAdapter(
@@ -103,7 +111,6 @@ class NoteListFragment : Fragment(){
             }
         }
     }
-
 
     private fun showSortBottomSheet() {
 

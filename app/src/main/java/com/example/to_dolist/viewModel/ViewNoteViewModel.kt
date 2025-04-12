@@ -4,11 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Query
 import com.example.to_dolist.constants.SortType
 import com.example.to_dolist.data.local.Notes
 import com.example.to_dolist.repo.INoteRepository
-import com.example.to_dolist.repo.NoteRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,7 +23,7 @@ class ViewNoteViewModel @Inject constructor(
     val filteredNotes: LiveData<List<Notes>> get() = _filteredNotes
 
     init {
-        fetchSortedNotes(SortType.DATE_ASC)
+        fetchSortedNotes(SortType.DATE_DESC)
     }
 
     fun insert(note: Notes) = viewModelScope.launch {
@@ -34,6 +32,10 @@ class ViewNoteViewModel @Inject constructor(
 
     fun delete(note: Notes) = viewModelScope.launch {
         repository.deleteNote(note)
+    }
+
+    fun update(note: Notes) = viewModelScope.launch{
+        repository.updateNote(note)
     }
 
     fun fetchSortedNotes(sortType: SortType){
