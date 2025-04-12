@@ -8,6 +8,9 @@ import com.example.to_dolist.data.local.Notes
 import com.example.to_dolist.databinding.NotesListBinding
 import com.example.to_dolist.view.NoteListFragmentDirections
 import com.example.to_dolist.util.NotesDiffCallUtil
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 class NotesAdapter(
@@ -20,10 +23,14 @@ class NotesAdapter(
     inner class NoteViewHolder(val binding: NotesListBinding) : RecyclerView.ViewHolder(binding.root){
 
     fun bind(note: Notes){
-       binding.apply {
+
+        val formattedDate = SimpleDateFormat("dd MMMM yyyy HH:mm", Locale.getDefault())
+            .format(Date(note.date))
+
+        binding.apply {
         noteTitle.text = note.title
          contentDisplay.text = note.content
-           noteDate.text = note.date
+           noteDate.text = formattedDate
            cvBottomNav.setOnClickListener {
                val action = NoteListFragmentDirections.actionNoteListFragmentToViewNoteFragment(note)
                 navController.navigate(action)
