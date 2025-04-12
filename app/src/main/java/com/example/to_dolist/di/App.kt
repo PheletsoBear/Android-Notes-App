@@ -10,12 +10,14 @@ class App : Application() {
 
     @Inject
     lateinit var  noteDao : NoteDao
-    override fun onCreate() {
-        super.onCreate()
-  /*Seeding Data*/
+
+
+//    override fun onCreate() {
+//        super.onCreate()
+//  /*Seeding Data*/
 //     CoroutineScope(Dispatchers.IO).launch {
 //            provideRandomNotes(noteDao)
 //        }
 //    }
-   }
+//   }
 }
