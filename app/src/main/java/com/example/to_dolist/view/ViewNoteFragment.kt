@@ -12,11 +12,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuHost
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.to_dolist.R
+import com.example.to_dolist.data.local.Notes
 import com.example.to_dolist.databinding.FragmentViewNoteBinding
 import com.example.to_dolist.viewModel.ViewNoteViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -29,6 +31,8 @@ class ViewNoteFragment: Fragment() {
 private lateinit var binding: FragmentViewNoteBinding
 private val viewModel: ViewNoteViewModel by viewModels()
 private val args: ViewNoteFragmentArgs by navArgs()
+private var showDone: Boolean = false
+private var showMenuItems: Boolean = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,24 +46,37 @@ private val args: ViewNoteFragmentArgs by navArgs()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val activity = requireActivity() as AppCompatActivity
-
-        activity.supportActionBar?.title = "My Note"
+        val currentNote = args.note
+        activity.supportActionBar?.title = if (currentNote != null) "My Note" else "Create note"
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setHasOptionsMenu(true)
 
-        binding.editTextHeading.setText(args.note.title)
-        binding.editTextSubHeader.setText(args.note.content)
-
+        currentNote?.let {
+            binding.editTextHeading.setText(currentNote.title)
+            binding.editTextSubHeader.setText(currentNote.content)
+        }
+        if (args.note == null){
+            showMenuItems = false
+        }
         setSubHeaderFocus()
         setHeaderFocus()
+        watchTextChanges(requireActivity())
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.view_note_menu, menu)
+        val doneItem = menu.findItem(R.id.done)
+        doneItem?.isVisible = showDone
+        val deleteItem = menu.findItem(R.id.delete_icon)
+        deleteItem.isVisible = showMenuItems
+        val shareItem = menu.findItem(R.id.share_icon)
+        shareItem.isVisible = showMenuItems
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val note = args.note
+
         when (item.itemId){
             android.R.id.home ->{
                 requireActivity().onBackPressed()
@@ -74,6 +91,32 @@ private val args: ViewNoteFragmentArgs by navArgs()
             R.id.delete_icon ->{
                 deleteNote()
                return  true
+            }
+
+            R.id.done ->{
+
+                val title = binding.editTextHeading.text.toString()
+                val content = binding.editTextSubHeader.text.toString()
+                val timestamp = System.currentTimeMillis()
+
+                if (note != null){
+                    note.title = title
+                    note.content = content
+                    note.date = timestamp
+                    viewModel.update(note)
+                }
+                else {
+                    if (title.isNotEmpty() || content.isNotEmpty()) {
+                        val newNote = Notes(
+                            title = title,
+                            content = content,
+                            date = timestamp
+                        )
+                        viewModel.insert(newNote)
+                    }
+                }
+                navigateToNoteList()
+                return true
             }
               else -> return super.onOptionsItemSelected(item)
         }
@@ -111,16 +154,22 @@ private val args: ViewNoteFragmentArgs by navArgs()
     }
 
     fun deleteNote(){
-        viewModel.delete(args.note)
-        val snackbar = Snackbar.make(binding.root, "Note deleted", Snackbar.LENGTH_LONG)
+        val note = args.note
+
+        note?.let{
+            viewModel.delete(it)
+        }
+
+        val snackbar = Snackbar.make(binding.root, "Note deleted!", Snackbar.LENGTH_LONG)
             .setAction("Undo") {
-                viewModel.insert(args.note)
+                note?.let {
+                    viewModel.insert(it)
+                }
             }
             .addCallback(object : Snackbar.Callback() {
                 override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                     if (event != DISMISS_EVENT_ACTION) {
-                        val action = ViewNoteFragmentDirections.actionViewNoteFragmentToNoteListFragment()
-                        findNavController().navigate(action)
+                        navigateToNoteList()
                     }
                 }
             })
@@ -138,4 +187,23 @@ private val args: ViewNoteFragmentArgs by navArgs()
         startActivity(intent)
     }
 
+    fun watchTextChanges(menuHost: MenuHost) {
+        val watcher = object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                showDone = true
+                activity?.invalidateOptionsMenu()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        }
+
+        binding.editTextHeading.addTextChangedListener(watcher)
+        binding.editTextSubHeader.addTextChangedListener(watcher)
+    }
+
+    fun navigateToNoteList(){
+        val action = ViewNoteFragmentDirections.actionViewNoteFragmentToNoteListFragment()
+        findNavController().navigate(action)
+    }
 }
