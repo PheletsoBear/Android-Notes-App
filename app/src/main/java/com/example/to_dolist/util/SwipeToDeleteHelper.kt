@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.to_dolist.R
+import com.example.to_dolist.constants.SortType
 import com.example.to_dolist.viewModel.ViewNoteViewModel
 import com.google.android.material.snackbar.Snackbar
 
@@ -40,12 +41,13 @@ class SwipeToDeleteHelper (
 
                 viewModel.delete(removedNote)
 
-                Snackbar.make(recyclerView, "Note deleted", Snackbar.LENGTH_LONG)
+                Snackbar.make(recyclerView, "Note deleted!", Snackbar.LENGTH_LONG)
                     .setAction("Undo") {
                         notesAdapter.notes.add(position, removedNote)
                         notesAdapter.notifyItemInserted(position)
                         viewModel.insert(removedNote)
                     }.show()
+                viewModel.fetchSortedNotes(SortType.DATE_DESC)
             }
 
             override fun onChildDraw(
@@ -85,7 +87,6 @@ class SwipeToDeleteHelper (
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             }
         }
-
         // Attach ItemTouchHelper to RecyclerView
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView)
     }
